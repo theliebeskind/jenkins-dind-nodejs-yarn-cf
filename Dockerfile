@@ -8,6 +8,8 @@ RUN apk --update add sudo git curl
 RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/testing' > /etc/apk/repositories
 RUN echo "===> Adding NodeJS..." 
 RUN apk --update add "nodejs=8.11.2-r0"
+RUN echo "===> Adding NPM..." 
+RUN apk --update add "nodejs-npm=8.11.2-r0"
 RUN echo "===> Adding YARN..." 
 RUN apk --update add --no-cache yarn
 RUN echo "===> Adding CF-CLI..." 
