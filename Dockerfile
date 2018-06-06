@@ -4,7 +4,7 @@ MAINTAINER Thomas Liebeskind (thomas.liebeskind@gmail.com)
 USER root
 
 RUN echo "===> Installing sudo to emulate normal OS behavior and other needed bins..."
-RUN apk --update add sudo git curl              
+RUN apk --update add sudo git curl gmp-dev              
 RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/testing' > /etc/apk/repositories
 RUN echo "===> Adding NPM..." 
 RUN apk --update add "nodejs-npm=8.11.2-r0"
