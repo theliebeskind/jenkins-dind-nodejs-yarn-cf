@@ -4,7 +4,7 @@ MAINTAINER Thomas Liebeskind (thomas.liebeskind@gmail.com)
 USER root
 
 RUN echo "===> Installing sudo to emulate normal OS behavior and other needed bins..."
-RUN apk --update add sudo git curl gmp-dev              
+RUN apk --update add sudo git curl gmp-dev gcc musl-dev g++ make
 RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/testing' > /etc/apk/repositories
 RUN echo "===> Adding NPM..." 
 RUN apk --update add "nodejs-npm=8.11.2-r0"
@@ -19,7 +19,7 @@ RUN rm -rf /var/cache/apk/*
 ENV LANG=C.UTF-8
 
 # Here we install GNU libc (aka glibc) and set C.UTF-8 locale as default.
-
+RUN echo "===> Installing glibc ..." 
 RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
     ALPINE_GLIBC_PACKAGE_VERSION="2.27-r0" && \
     ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
@@ -50,5 +50,12 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
         "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
         "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
         "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME"
+
+RUN echo "===> Installing libsysconfcpus ..." 
+RUN git clone https://github.com/obmarg/libsysconfcpus.git && \
+    cd libsysconfcpus && \
+    ./configure --prefix=/usr/sysconfcpus && \
+    make && make install && cd ..
+RUN echo "===> Check libsysconfcpus ..."     
 
 USER jenkins
