@@ -1,15 +1,14 @@
-FROM oviis/jenkins-dind-slave:v2
-MAINTAINER Thomas Liebeskind (thomas.liebeskind@gmail.com)
+FROM jenkins/jnlp-slave:alpine
 
 USER root
 
 RUN echo "===> Installing sudo to emulate normal OS behavior and other needed bins..."
-RUN apk --update add sudo git curl gcc gmp-dev musl-dev            
 RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/testing' > /etc/apk/repositories
+RUN apk --update add sudo git curl gcc musl gmp-dev musl-dev            
 RUN echo "===> Adding NodeJS..." 
-RUN apk --update add "nodejs=8.11.4-r0"
+RUN apk --update add "nodejs=12.14.1-r0"
 RUN echo "===> Adding NPM..." 
-RUN apk --update add "nodejs-npm=8.11.4-r0"
+RUN apk --update add "nodejs-npm=12.14.1-r0"
 RUN echo "===> Adding YARN..." 
 RUN apk --update add --no-cache yarn
 RUN echo "===> Adding CF-CLI..." 
@@ -21,7 +20,7 @@ ENV LANG=C.UTF-8
 # Here we install GNU libc (aka glibc) and set C.UTF-8 locale as default.
 
 RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
-    ALPINE_GLIBC_PACKAGE_VERSION="2.28-r0" && \
+    ALPINE_GLIBC_PACKAGE_VERSION="2.30-r0" && \
     ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
     ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
     ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
@@ -44,7 +43,6 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
     \
     apk del glibc-i18n && \
     \
-    rm "/root/.wget-hsts" && \
     apk del .build-dependencies && \
     rm \
         "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
@@ -52,3 +50,5 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
         "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME"
 
 USER jenkins
+
+WORKDIR ${HOME}
